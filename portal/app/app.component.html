@@ -1,0 +1,18 @@
+﻿<div  >
+    <!-- START WRAPPER -->
+    <section id="content" id="main" *ngIf=isSignedIn>
+        <!--start container-->
+        <div class="container">
+            <nav class="myNav"></nav>
+            <router-outlet></router-outlet>
+        </div>
+    </section>
+
+    <section id="content" id="remain" *ngIf=!isSignedIn>
+        <!--start container-->
+        <div class="container">
+            <nav class="myNav"></nav>
+            <router-outlet></router-outlet>
+        </div>
+    </section>
+</div>

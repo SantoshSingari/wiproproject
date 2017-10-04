@@ -1,0 +1,47 @@
+<div id="main">
+   <!-- START WRAPPER -->
+   <div class="wrapper" *ngIf="showMenu">
+      <!-- START LEFT SIDEBAR NAV-->
+      <aside id="left-sidebar-nav">
+         <ul id="slide-out" class="side-nav fixed leftside-navigation">
+            <li class="user-details">
+               <div class="row">
+                  <div class="col col s12 m12 l12 center"> <img src="app/images/logo.png" alt="" class="circle responsive-img valign profile-image"> </div>
+               </div>
+            </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+            <li class="bold"><a [routerLink]="['/dashboard']" class="waves-effect waves-cyan"><i class="mdi-action-dashboard"></i> Dashboard</a>          </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+            <li class="bold active"><a [routerLink]="['/fixtures']" class="waves-effect waves-cyan"><i class="mdi-image-wb-sunny"></i> Smart Luminors</a>          </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+            <li class="bold"><a [routerLink]="['/manage']" class="waves-effect waves-cyan"><i class="mdi-image-tune"></i> Configure</a> </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+            <li class="bold"><a [routerLink]="['/schedules']" class="waves-effect waves-cyan"><i class="mdi-notification-event-note"></i> Schedules</a>          </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+            <li class="bold"><a [routerLink]="['/user']" class="waves-effect waves-cyan"><i class="mdi-action-settings"></i>Settings</a> </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+            <li class="bold"><a [routerLink]="['/login']" class="waves-effect waves-cyan"><i class="mdi-notification-event-note"></i> Logout</a>          </li>
+            <li class="li-hover">
+               <div class="divider"></div>
+            </li>
+         </ul>
+         <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only cyan"><i class="mdi-navigation-menu"></i></a>
+      </aside>
+      <!-- END LEFT SIDEBAR NAV-->
+   </div>
+</div>

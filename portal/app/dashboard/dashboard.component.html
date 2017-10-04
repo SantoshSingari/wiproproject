@@ -1,0 +1,224 @@
+<section id="content">
+    <!--start container-->
+    <div class="container">
+
+        <div class="mTabsContainer  margin-top-20 padding-10">
+            <div class="clearfix margin-bottom-10 center">
+                <h5 class="margin-0">Energy Savings </h5>
+            </div>
+            <div class="row font-Roboto center">
+                <div class="col s3">
+                    <div class="clearfix padding-top-10">
+                        <h5 class="margin-0 HdSmTxt">Energy Saving</h5>
+                    </div>
+                    <p class="center brand-green inline-block"> {{totalWattage.energySavings}} W-Hr </p>
+                    <div class="clearfix padding-top-20">
+                        <h5 class="margin-0 HdSmTxt">Cost Saving</h5>
+                    </div>
+                    <p class="center brand-green inline-block"> {{totalWattage.energySavings * 8}} INR</p>
+                </div>
+                <div class="col s4 gray-border-left">
+                    <!--<div class="cloudBg">{{deviceStats==null?"":calcEmission()}} Tons</div>-->
+                    <div class="cloudBg">{{co2reduced}}
+                        Kg</div>
+                    <p class="HdSmTxt">of CO<sub>2</sub> reduced</p>
+                </div>
+                <div class="col s3">
+                    <!--<h5 class="brand-green">{{deviceStats==null?"":calcTreeCount()}} Trees</h5>-->
+                    <p class="brand-green"> {{noOfTrees}} Tree(s)</p>
+                    <p class="HdSmTxt">would have been required to offset CO<sub>2</sub> output</p>
+                </div>
+                <div class="col s2"> <img src="app/images/tree.png" class="responsive-img"> </div>
+            </div>
+        </div>
+
+        <div class="mTabsContainer  margin-top-20 padding-10">
+            <div class="clearfix margin-bottom-20 center">
+                <h5 class="margin-0">Energy Consumption Trend</h5>
+                 <div class="ui-helper-clearfix" style="float:right">
+                   <button type="button" pButton icon="fa-file-o" iconPos="left" label="Export" (click)="dt.exportCSV()"></button>
+                 </div>
+            </div>
+            <div class="right-align clearfix font-Roboto">
+                <span class="margin-left-10">
+            <p-dropdown class="pDd" [options]="floorList" [autoWidth]="false"  [(ngModel)]="selectedFloor"></p-dropdown>
+            </span>
+                <span class="margin-left-10">
+            <p-dropdown class="pDd" [options]="durationList" [autoWidth]="false" (onChange)="reloadChart(chart)"   [style]="{'width':'150px'}" [(ngModel)]="selectedDuration"></p-dropdown>
+            </span>
+            </div>
+            <div style="display:block ; width: 100% ; height: 100%;">
+               
+                <p-chart #chart type="line" [data]="energyConsumptionData" [options]="lineChartOptions"></p-chart>
+                <div class="center"><b>{{selectedLabel}}</b></div>
+                <p-dataTable [value]="deviceEnergyStats" [editable]="true" #dt  exportFilename="Energy Data">
+                    <p-column field="createdOn" header="Created On" hidden="true"></p-column>
+                    <p-column field="energyConsumed" header="Energy Consumed" hidden="true"></p-column>
+                    <p-column field="fixtureStatus" header="Fixture Status" hidden="true"></p-column> 
+                    <p-column field="sensorStatus" header="Sensor Status" hidden="true"></p-column>
+                    <p-column field="wallMountStatus" header="Wall Mount Status" hidden="true"></p-column>
+                </p-dataTable>
+                
+            </div>
+        </div>
+
+        <div class="mTabsContainer  margin-top-20 padding-10">
+               <div class="clearfix row">
+                <div class="col s3 center">
+                  <p style="font-size:25px;margin-top:-8px;">Occupancy</p>
+                </div>
+               <div class="col offset-s6 s3 center">
+              <p style="font-size:25px;margin-top:-8px">Illuminance (Lux)</p>
+                </div>
+              </div>
+           
+            <div class="row font-Roboto">
+            
+                <div class="col s3 center ">
+                    <p-chart type="pie" height="250" width="300" [data]="categorywiseEnergyConsumptionData" [options]="pieChartOptions"></p-chart>
+                </div>
+                <div class="col s6">
+                    <div class="row ">
+                        <div class="col s6">
+                            <div class="row">
+                                <div class="col s4">
+                                    <span class="legend blk1"></span> </div>
+                                <div class="col s4">
+                                    People </div>
+                                <div class="col s4">
+                                   <img src="app/images/focus-24.png">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col s4">
+                                    <span class="legend blk2"></span> </div>
+                                <div class="col s4">
+                                    Focus </div>
+                                <div class="col s4">
+                                      <img src="app/images/workstation-24.png">
+                                   
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col s4">
+                                    <span class="legend blk3"></span> </div>
+                                <div class="col s4">
+                                    Engage </div>
+                                <div class="col s4">
+                                    <img src="app/images/training-24.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <div class="row">
+                                <div class="col s4">
+                                    <span class="legend blk4"></span> </div>
+                                <div class="col s6">
+                                    Collaboration </div>
+                                <div class="col s2">
+                                    <img src="app/images/meeting-24.png">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col s4">
+                                    <span class="legend blk5"></span> </div>
+                                <div class="col s6">
+                                    Social </div>
+                                <div class="col s2">
+                                    <img src="app/images/social-24.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3 center">
+                    <p-chart type="pie" height="250" width="300" [data]="illumainanceData" [options]="pieChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+
+        <div class="mTabsContainer  margin-top-20 padding-10">
+            <div class="clearfix margin-bottom-20 center">
+                <h5 class="margin-0">Luminaires Status</h5>
+            </div>
+            <div class="row font-Roboto center">
+                <div class="col s3">
+                    <a [routerLink]="['/fixtures','all',-1,1]" style="cursor:pointer;" [class.active]="activeMode=='all'" (click)="setActiveMode('all','all', -1, 1)">
+                        <h1 class="head inline-block">{{deviceStats==null?"":getTotal(deviceStats.fixtureStatus)}}  </h1>
+                        <p class="HdSmTxt">Total Connected</p>
+                    </a>
+                </div>
+                <div class="col s3">
+                    <a [routerLink]="['/fixtures','on', 1, 1]" style="cursor:pointer;" [class.active]="activeMode=='on'" (click)="setActiveMode('on', 1)">
+                        <h1 class="head inline-block brandcolor"><img src="app/images/bulb-on.png"> {{deviceStats==null?"":checkVal(deviceStats.fixtureStatus.onCount)}} </h1>
+                        <p class="HdSmTxt">Switched On</p>
+                    </a>
+                </div>
+                <div class="col s3">
+                    <a [routerLink]="['/fixtures', 'off', 0, 1]" style="cursor:pointer;" [class.active]="activeMode=='off'" (click)="setActiveMode('off', 0)">
+                        <h1 class="head inline-block brand-gray"><img src="app/images/bulb-off.png"> {{deviceStats==null?"":checkVal(deviceStats.fixtureStatus.offCount)}} </h1>
+                        <p class="HdSmTxt">Switched Off</p>
+                    </a>
+                </div>
+                <div class="col s3">
+                    <a [routerLink]="['/fixtures','noop', 2, 1]" style="cursor:pointer;" (click)="setActiveMode('noop', 2)" [class.active]="activeMode=='noop'">
+                        <h1 class="head center inline-block brandcolor1"><img src="app/images/bulb-non.png"> {{deviceStats==null?"":checkVal(deviceStats.fixtureStatus.nonOpCount)}} </h1>
+                        <p class="HdSmTxt">Non Operational</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mTabsContainer  margin-top-20 padding-10">
+            <div class="clearfix margin-bottom-20 center">
+                <h5 class="margin-0">Sensors</h5>
+            </div>
+            <div class="row font-Roboto center">
+                <div class="col s8">
+                    <div class="row">
+                        <div class="col s3">
+                            <h1 class="head">{{deviceStats==null?"":getTotal(deviceStats.sensorStatus)}}  </h1>
+                            <p class="HdSmTxt">Total</p>
+                        </div>
+                        <div class="col s3">
+                            <h1 class="head brandcolor"> {{deviceStats==null?"":checkVal(deviceStats.sensorStatus.onCount)}}  </h1>
+                            <p class="HdSmTxt">Operational</p>
+                        </div>
+                        <div class="col s4">
+                            <h1 class="head brandcolor1"> {{deviceStats==null?"":checkVal(deviceStats.sensorStatus.nonOpCount)}} </h1>
+                            <p class="HdSmTxt">Non Operational</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s4 gray-border-left">
+                    <!--<h1 class="head"> {{deviceStats==null?"":checkVal(deviceStats.sensorStatus.avgTemperature)}}  <sup>o C</sup> </h1>-->
+                    <h1 class="head"> 23 <sup>o C</sup> </h1>
+                    <p class="HdSmTxt">Avg. Temperature</p>
+                </div>
+            </div>
+        </div>
+        <div class="mTabsContainer  margin-top-20 padding-10">
+            <div class="clearfix margin-bottom-20 center">
+                <h5 class="margin-0">Wall Mount Switches</h5>
+            </div>
+            <div class="row font-Roboto center">
+                <div class="col s2">
+                    <h1 class="head">{{deviceStats==null?"":getTotal(deviceStats.wallMountStatus)}} </h1>
+                    <p class="HdSmTxt">Total</p>
+                </div>
+                <div class="col s2">
+                    <h1 class="head brandcolor"> {{deviceStats==null?"":checkVal(deviceStats.wallMountStatus.onCount)}} </h1>
+                    <p class="HdSmTxt">Switched On</p>
+                </div>
+                <div class="col s3">
+                    <h1 class="head brandcolor1"> {{deviceStats==null?"":checkVal(deviceStats.wallMountStatus.offCount)}}  </h1>
+                    <p class="HdSmTxt">Switched Off</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end container-->
+</section>
+<!-- END CONTENT -->

@@ -1,0 +1,30 @@
+﻿<p-growl [value]="msgs" sticky="sticky"></p-growl>
+           <div style="margin-top:50px">
+            <div class="login-logo"><img height="180" src="app/images/wipro_logo_3.png"></div>
+            <div class="login-logo">
+                <h4 class="bold">WILCOS Director</h4>
+            </div>
+            <!--<div class="login-hdng">
+                <h1>Safe Extra Low Voltage</h1>
+            </div>-->
+            <div class="loginPanel">
+                <div class="actionBox">
+                    <div class="login-subHdng">Sign in</div>
+                    <div class="center">
+                        <input type="text" placeholder="Email" [(ngModel)]="user.userName" class="loginTxtBox">
+                    </div>
+                    <div class="center">
+                        <input type="password" placeholder="Password" [(ngModel)]="user.password" class="loginTxtBox" style="margin-top: 10px !important">
+                    </div>
+                    <div class="center text-center padding-top-20 padding-5"> <a (click)="login(user)" class="btn btn-brand">Sign in</a> </div>
+                </div>
+            </div>
+           
+            </div>
+      
+
+ <script type="text/javascript">
+$(document).ready(function(){
+    $(this).find("#main").css({"padding-left": "0"});
+});
+</script>

@@ -1,0 +1,177 @@
+﻿<p-growl [value]="msgs" sticky="sticky"></p-growl>
+<div class="padding-20">
+  <div class="margin-bottom-10">
+    <div class="ui-helper-clearfix" style="width:100%"><a class="btn btn-brand margin-top-5" icon="fa-plus" iconPos="left" (click)="showDialogToAdd(schedules)" style="float:right;color:#222222">ADD SCHEDULE</a></div>
+  </div>
+  <p-dataTable [value]="schedulesList" selectionMode="single" [(selection)]="selectedSchedules" (onRowSelect)="onRowSelect($event)"
+    [paginator]="true" rows="15" [responsive]="true">
+    <p-column field="name" header="Description" [sortable]="false"></p-column>
+    <p-column field="condition" header="Condition" styleClass="col-button">
+      <template let-sch="rowData" pTemplate="body">
+        <span>{{getCondition(sch)}}</span>
+      </template>
+    </p-column>
+    <!--<p-column field="tags" header="Tags" [sortable]="false"></p-column>-->
+    </p-dataTable>
+</div>
+<p-dialog header="Add Schedule" *ngIf="!schedules.id" [(visible)]="displayDialog" [draggable]="false" [responsive]="true" showEffect="fade"
+  [modal]="true" width="600">
+  <p-tabView>
+    <p-tabPanel header="Selection">
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="name">Description</label></div>
+        <div class="ui-grid-col-8"><input pInputText id="name" [(ngModel)]="schedules.name" placeholder="Description" /></div>
+      </div>
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="Tags">Groups</label></div>
+        <div class="ui-grid-col-8">
+          <p-autoComplete [(ngModel)]="selectedTags" [suggestions]="filteredTags" (completeMethod)="filterTags($event)" styleClass="wid100"
+            class="tuc" [minLength]="1" placeholder="Select Groups" field="name" [multiple]="true">
+            </p-autoComplete>
+        </div>
+      </div>
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="days">Day Selection</label></div>
+        <div class="ui-grid-col-8">
+          <div class="ui-grid-row">
+            <p-checkbox label="Monday" [(ngModel)]="isMonday" binary="true" (onChange)="setDay(1, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Tuesday" [(ngModel)]="isTuesday" binary="true" (onChange)="setDay(2, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Wednesday" [(ngModel)]="isWednesday" binary="true" (onChange)="setDay(3, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Thrusday" [(ngModel)]="isThrusday" binary="true" (onChange)="setDay(4, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Friday" [(ngModel)]="isFriday" binary="true" (onChange)="setDay(5, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Saturday" [(ngModel)]="isSatday" binary="true" (onChange)="setDay(6, $event, schedules)"></p-checkbox>
+             <p-checkbox label="Sunday" [(ngModel)]="isSunday" binary="true" (onChange)="setDay(7, $event, schedules)"></p-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="from">Run at time</label></div>
+        <div class="ui-grid-col-8" *ngIf="!schedules.id">
+          <p-calendar [(ngModel)]="schedules.scheduleAtText" placeholder="Time" [stepMinute] = "10" [timeOnly]="true" [showTime]="true"  hourFormat="24"></p-calendar>
+        </div>
+        <div class="ui-grid-col-8" *ngIf="schedules.id">
+          <p-calendar [(ngModel)]="schedules.scheduleAtText" placeholder="Time" [stepMinute] = "10" [timeOnly]="true" ngPattern="/0-9/" [showTime]="true"
+            hourFormat="24"></p-calendar>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Operation">
+      <div class="mTabsContainer clearfix">
+        <div class="row">
+          <div id="connected" class="col s12">
+            <div class="actionPanel">
+              <p class="margin-0 padding-0">Actions</p>
+              <div class="row center">
+                <div class="col s6">
+                  <div class="actionBox">
+                    <p class="margin-0 padding-5 margin-bottom-10">POWER</p>
+                    <div class="switch">
+                      <label> Off
+                                    <input type="checkbox"  [checked]="globalIntensity>0?true:false" (click)="devicePowerToggle($event.target.checked)"/>
+                                    <span class="lever"></span> On </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s6">
+                  <div class="actionBox">
+                    <p class="margin-0 padding-5">INTENSITY - {{globalIntensity}}%</p>
+                    <p-slider [(ngModel)]="globalIntensity" animate="true" [step]="10"></p-slider>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </p-tabPanel>
+  </p-tabView>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a class="btn btn-brand margin-top-5" style="float:right;" *ngIf="!schedules.id" (click)="addSchedules(schedules)">Save</a>
+      <a class="btn btn-brand margin-top-5" style="float:left;" *ngIf="!schedules.id" (click)="cancel(schedules)">Cancel</a>
+    </div>
+  </p-footer>
+  </p-dialog>
+
+  <p-dialog header="Edit Schedule" *ngIf="schedules.id" [(visible)]="displayDialog" [draggable]="false" [responsive]="true" showEffect="fade"
+  [modal]="true" width="600">
+  <p-tabView>
+    <p-tabPanel header="Selection">
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="name">Description</label></div>
+        <div class="ui-grid-col-8"><input pInputText id="name" [(ngModel)]="schedules.name" placeholder="Description" /></div>
+      </div>
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="Tags">Groups</label></div>
+        <div class="ui-grid-col-8">
+          <p-autoComplete [(ngModel)]="selectedTags" [suggestions]="filteredTags" (completeMethod)="filterTags($event)" styleClass="wid100"
+            class="tuc" [minLength]="1" placeholder="Select Groups" field="name" [multiple]="true">
+            </p-autoComplete>
+        </div>
+      </div>
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="days">Day Selection</label></div>
+        <div class="ui-grid-col-8">
+          <div class="ui-grid-row">
+            <p-checkbox label="Monday" [(ngModel)]="isMonday" binary="true" (onChange)="setDay(1, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Tuesday" [(ngModel)]="isTuesday" binary="true" (onChange)="setDay(2, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Wednesday" [(ngModel)]="isWednesday" binary="true" (onChange)="setDay(3, $event, schedules)"></p-checkbox>
+           <p-checkbox label="Thrusday" [(ngModel)]="isThrusday" binary="true" (onChange)="setDay(4, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Friday" [(ngModel)]="isFriday" binary="true" (onChange)="setDay(5, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Saturday" [(ngModel)]="isSatday" binary="true" (onChange)="setDay(6, $event, schedules)"></p-checkbox>
+            <p-checkbox label="Sunday" [(ngModel)]="isSunday" binary="true" (onChange)="setDay(7, $event, schedules)"></p-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui-grid-row margin-bottom-10">
+        <div class="ui-grid-col-4"><label for="from">Run at time</label></div>
+        <div class="ui-grid-col-8" *ngIf="!schedules.id">
+          <p-calendar [(ngModel)]="schedules.scheduleAtText" placeholder="Time" [stepMinute] = "10" [timeOnly]="true" [showTime]="true" hourFormat="24"></p-calendar>
+        </div>
+        <div class="ui-grid-col-8" *ngIf="schedules.id">
+          <p-calendar [(ngModel)]="schedules.scheduleAtText" placeholder="Time" [stepMinute] = "10" [timeOnly]="true" ngPattern="/0-9/" [showTime]="true"
+            hourFormat="24"></p-calendar>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Operation">
+      <div class="mTabsContainer clearfix">
+        <div class="row">
+          <div id="connected" class="col s12">
+            <div class="actionPanel">
+              <p class="margin-0 padding-0">Actions</p>
+              <div class="row center">
+                <div class="col s6">
+                  <div class="actionBox">
+                    <p class="margin-0 padding-5 margin-bottom-10">POWER</p>
+                    <div class="switch">
+                      <label> Off
+                                    <input type="checkbox"  [checked]="globalIntensity>0?true:false" (click)="devicePowerToggle($event.target.checked)"/>
+                                    <span class="lever"></span> On </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s6">
+                  <div class="actionBox">
+                    <p class="margin-0 padding-5">INTENSITY - {{globalIntensity}}%</p>
+                    <p-slider [(ngModel)]="globalIntensity" animate="true" [step]="10"></p-slider>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </p-tabPanel>
+  </p-tabView>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a class="btn btn-brand margin-top-5" style="float:left;" *ngIf="schedules.id" (click)="delete(schedules)">Delete</a>
+      <a class="btn btn-brand margin-top-5" style="float:right;" *ngIf="schedules.id" (click)="update(schedules)">Update</a>
+       </div>
+  </p-footer>
+  </p-dialog>

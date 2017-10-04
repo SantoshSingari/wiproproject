@@ -1,0 +1,61 @@
+<p-growl [value]="msgs" sticky="sticky"></p-growl>
+
+        <div>
+            <div class="margin-bottom-10">
+                <div class="ui-helper-clearfix" style="width:100%"><a class="btn btn-brand margin-top-15" (click)="showDialogToAdd()" style="float:right;color:#222222">ADD USER</a></div>
+            </div>
+            <p-dataTable [value]="users" selectionMode="single" [(selection)]="selectedUser" [paginator]="true" (onRowSelect)="onRowUserSelect($event, true)"
+                rows="15" [responsive]="true">
+                <p-column field="firstName" header="Username" [sortable]="true"></p-column>
+                <p-column field="email" header="Email" [sortable]="true"></p-column>
+                </p-dataTable>
+        </div>
+
+
+        <p-dialog header=" Add User Details" *ngIf="!user.id" [(visible)]="displayUserDialog"  [draggable]="false"  [responsive]="true" showEffect="fade" [modal]="true">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" *ngIf="user">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"><label for="userName">Username</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id="userName" [(ngModel)]="user.firstName" /></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"><label for="email">Email</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id="email" [(ngModel)]="user.email" /></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"><label for="password">Password</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id="password" [(ngModel)]="user.password" /></div>
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <a class="btn btn-brand margin-top-5" style="float:right;" *ngIf="!user.id" (click)="add(user)">Save</a>
+                    <a class="btn btn-brand margin-top-5" style="float:left;" *ngIf="!user.id" (click)="cancel(user)">Cancel</a>
+                </div>
+            </p-footer>
+        </p-dialog>
+   
+   
+        <p-dialog header=" Edit User Details" *ngIf="user.id" [(visible)]="displayUserDialog"  [draggable]="false"  [responsive]="true" showEffect="fade" [modal]="true">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" *ngIf="user">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"><label for="userName">Username</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id="userName" [(ngModel)]="user.firstName" /></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"><label for="email">Email</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id="email" [(ngModel)]="user.email" /></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4"><label for="password">Password</label></div>
+                    <div class="ui-grid-col-8"><input pInputText id="password" readonly="true" [(ngModel)]="user.password" /></div>
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <a class="btn btn-brand margin-top-5" style="float:left;" *ngIf="user.id" (click)="delete(user)">Delete</a>
+                    <a class="btn btn-brand margin-top-5" style="float:right;" *ngIf="user.id" (click)="update(user)">Update</a>
+                  
+                </div>
+            </p-footer>
+        </p-dialog>

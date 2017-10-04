@@ -1,0 +1,185 @@
+<p-growl [value]="msgs" sticky="sticky"></p-growl>
+<p-tabView>
+    <p-tabPanel header="Config">
+      <div class="clearfix drpdwn">
+        <p-dropdown class="pDd fixPDD whtBtn" [options]="floorList" [autoWidth]="false" [(ngModel)]="selectedFloor"></p-dropdown>
+     </div>
+<!--<div style="height:250px;background-color:black">
+   <div  class="center" style="color:white;padding-top:100px;"> 
+      <button class="btn btn-primary" type="button" data-toggle="dropdown">ADD FLOOR MAP
+      </button>
+   </div>
+</div>-->
+
+    <img src="app/images/floor_map.PNG" alt="floor map" style="max-width:100%;
+width:100%; height:200px;">
+
+<div class="section">
+   <a class="btn btn-brand" *ngIf="selectedDevices != null && selectedDevices.length > 0"  (click)="addTags()">Add Groups</a> 
+   <div class="ui-helper-clearfix" style="float:right">
+     <button type="button" pButton icon="fa-file-o" iconPos="left" label="Export" (click)="dt.exportCSV()" style="float:left;margin:10px"></button>
+   </div>
+</div>
+<section id="content">
+<div style="z-index:99999999;position:absolute;left:55%;top:40%" *ngIf="isShowSpinner" class='loading spin-1'>
+  <div class='loading spin-2'>
+    <div class='loading spin-3'>
+      <div class='loading spin-4'>
+        <div class='loading spin-5'>
+          <div class='loading spin-6'></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+     <!--div class="section"-->
+   <!--start container-->
+   <div class="container">
+      <div class="section">
+         <div class="row">
+            <div [ngBusy]="{busy: busy, message: 'Loading...', backdrop: false, delay: 200, minDuration: 600}"></div>
+            <div id = "discoveryDeviceTable" class="selTable ">
+               <!-- mTabsContainer clearfix  -->
+               <p-dataTable [value]="deviceList" [(selection)]="selectedDevices" [editable]="true"  #dt  exportFilename="Device Data">
+               <p-column [style]="{'width':'38px'}" selectionMode="multiple" ></p-column>
+               <p-column field="name" header="Name" [editable]="true"   ></p-column>
+               <!--<p-column field="serialNumber" header="Fixture Id"   ></p-column>-->
+               <p-column field="ipAddress" header="IP" ></p-column>
+               <p-column field="productCode" header="Product Type"> </p-column>
+               <p-column field="category" [editable]="true"   header="Category"  [style]="{'overflow':'visible'}"    >
+                   
+               <template let-col let-cat="rowData" pTemplate="editor" >
+                  <p-dropdown  [(ngModel)]="selectedCategory" [options]="categoryList" [autoWidth]="true" [style]="{'z-index':'999999999','width':'100%'}" required="true"></p-dropdown>
+               </template>
+               </p-column>
+               <p-column field="tagNames" header="Groups" [editable]="false">
+                  <template let-device="rowData" pTemplate="body">
+                    <ul *ngFor="let tag of getTagNames(device.tagNames)">
+                    <li  class="ui-autocomplete-token ui-state-highlight ui-corner-all">
+                    <span  class="ui-autocomplete-token-icon fa fa-fw fa-close" (click)="unTag(device, tag)"></span>
+                    <span class="ui-autocomplete-token-label">{{tag}}</span>
+                   </li>
+                    </ul>
+                  </template>
+               </p-column>
+              <p-column field="acts" header="Status" >
+                  <template let-deviceAction="rowData" pTemplate="body">
+                      <img  *ngIf = "deviceAction.status==1"  type="img"  src="/app/images/bulb-on.png"/>
+                      <img  *ngIf = "deviceAction.status==0"  type="img"  src="/app/images/bulb-off.png"/>
+                      <img  *ngIf = "deviceAction.status==-1"  type="img"  src="/app/images/bulb-non.png"/>
+                  </template>
+               </p-column>
+
+               <p-column   field="acts" header="Action">
+                  <template let-device="rowData" pTemplate="body">
+                    <button pButton type="button" (click)="updateDevice(device)"  icon="fa-check"  label="Update"></button>
+                  </template>
+                  </p-column>
+               </p-dataTable>
+            </div>
+         </div>
+      </div>
+      <p-dialog header="Add Group"  [(visible)]="dialogVisible" modal="modal" width="400" responsive="true" >
+    <h6> Groups</h6>
+      <p-autoComplete [(ngModel)]="selectedTags" [suggestions]="filteredTags" (completeMethod)="filterTags($event)"   [style]="{'height':'60px'}"
+      [minLength]="1" placeholder="Select Groups" field="name" [multiple]="true">
+      </p-autoComplete>
+      <p-footer>
+         <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a class="btn btn-brand margin-top-5" style="float:left;" (click)="dialogVisible=false" >Cancel</a> 
+            <a class="btn btn-brand margin-top-5" style="float:right;" (click)="tagDevice()">Save</a>               
+         </div>
+      </p-footer>
+      </p-dialog>
+   </div>
+</section>
+
+
+
+
+
+    </p-tabPanel>
+    <p-tabPanel header="Scene Management">
+         <div>
+            <div class="margin-bottom-10">
+                <div class="ui-helper-clearfix" style="width:100%"><a class="btn btn-brand margin-top-5" (click)="showSceneDialogToAdd()" style="float:right">ADD SCENE</a></div>
+            </div>
+            <p-dataTable [value]="scenes" selectionMode="single" [(selection)]="name" [paginator]="true" (onRowSelect)="onRowSceneSelect($event, false)"
+                rows="15" [responsive]="true">
+                <p-column field="category" header="Category" [sortable]="true"></p-column>
+                <p-column field="name" header="Scene name" [sortable]="true"></p-column>
+                <p-column field="intensity" header="Intensity" [sortable]="true"></p-column>
+                </p-dataTable>
+        </div>
+        <p-dialog header="Add Scene Details" *ngIf="!scene.id"  [draggable]="false" [(visible)]="displaySceneDialog" [responsive]="true" showEffect="fade" [modal]="true" >
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" *ngIf="scene">
+                <div class="ui-grid-row padding-bottom-15">
+                    <div class="ui-grid-col-4"><label for="category">Category</label></div>
+                    <div class="ui-grid-col-8 margin-left-20">
+                        <p-dropdown [options]="categoryList" [(ngModel)]="selectedCategory" [style]="{'width':'180px'}">
+                            <template let-car pTemplate="item">
+                                <div class="ui-helper-clearfix" style="position: relative;height: 20px;">
+                                    <div style="font-size:14px;float:left;margin-top:4px">{{car.label}}</div>
+                                </div>
+                            </template>
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-grid-row padding-bottom-15">
+                    <div class="ui-grid-col-4"><label for="scene">Scene Name</label></div>
+                    <div class="ui-grid-col-8 margin-left-20"><input pInputText id="scene" [(ngModel)]="scene.name" /></div>
+                </div>
+                <div class="ui-grid-row padding-bottom-15">
+                    <div class="ui-grid-col-4"><label for="intensity">Intensity</label> </div>
+                    <div class="ui-grid-col-8 margin-left-20">
+                        <p-slider [(ngModel)]="scene.intensity" [style]="{'width':'160px'}"  [step]="10"></p-slider>
+                    </div>{{scene.intensity}}%
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <a class="btn btn-brand margin-top-5" style="float:right;" *ngIf="!scene.id" (click)="saveScene(scene)">Save</a>
+                    <a class="btn btn-brand margin-top-5" style="float:left;" *ngIf="!scene.id" (click)="cancelScene(scene)">Cancel</a>
+                </div>
+            </p-footer>
+        </p-dialog>
+
+
+
+         <p-dialog header="Update Scene Details"   *ngIf="scene.id"[draggable]="false" [(visible)]="displaySceneDialog" [responsive]="true" showEffect="fade" [modal]="true">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" *ngIf="scene">
+                <div class="ui-grid-row padding-bottom-15">
+                    <div class="ui-grid-col-4"><label for="category">Category</label></div>
+                    <div class="ui-grid-col-8 margin-left-20">
+                        <p-dropdown [options]="categoryList" [(ngModel)]="selectedCategory" [style]="{'width':'180px'}">
+                            <template let-car pTemplate="item">
+                                <div class="ui-helper-clearfix" style="position: relative;height: 20px;">
+                                    <div style="font-size:14px;float:left;margin-top:4px">{{car.label}}</div>
+                                </div>
+                            </template>
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-grid-row padding-bottom-15">
+                    <div class="ui-grid-col-4"><label for="scene">Scene Name</label></div>
+                    <div class="ui-grid-col-8 margin-left-20"><input pInputText id="scene" [(ngModel)]="scene.name" /></div>
+                </div>
+                <div class="ui-grid-row padding-bottom-15">
+                    <div class="ui-grid-col-4"><label for="intensity">Intensity</label> </div>
+                    <div class="ui-grid-col-8 margin-left-20">
+                        <p-slider [(ngModel)]="scene.intensity" [style]="{'width':'160px'}"  [step]="10"></p-slider>
+                    </div>{{scene.intensity}}%
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <a class="btn btn-brand margin-top-5" style="float:left;" *ngIf="scene.id" (click)="deleteScene(scene)">Delete</a>
+                    <a class="btn btn-brand margin-top-5" style="float:right;" *ngIf="scene.id" (click)="updateScene(scene)">Update</a>
+                   </div>
+            </p-footer>
+        </p-dialog>
+    </p-tabPanel>
+  
+</p-tabView>
+ 

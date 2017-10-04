@@ -1,0 +1,52 @@
+<div class="wrapper" *ngIf="showNavBar">
+   <!-- START LEFT SIDEBAR NAV-->
+   <aside id="left-sidebar-nav" >
+      <ul id="slide-out" class="side-nav fixed leftside-navigation">
+         <li class="user-details">
+            <div class="row">
+               <div class="col col s12 m12 l12 center relative"> 
+                   <img src="app/images/wipro_logo_3.png"  height="110" alt="" class="circle responsive-img valign profile-image"> 
+                   <a onclick="document.getElementById('slide-out').style.left='-105%';" class="xbtn">X</a>
+                   </div>
+            </div>
+              <p class="center bold" style="color:#000000; margin-top: 0;font-size:20px">WILCOS Director</p>
+         </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+         <li class="bold" [class.active]="router.url=='/dashboard'"><a [routerLink]="['/dashboard']" class="waves-effect waves-cyan"><i class="mdi-action-dashboard"></i> Dashboard</a>   </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+         <li class="bold" [class.active]=" (router.url=='/allfixtures' || router.url=='/fixtures') "><a [routerLink]="['/allfixtures']" class="waves-effect waves-cyan"><i class="mdi-image-wb-sunny"></i> Smart Control</a>          </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+         <li class="bold" [class.active]="router.url=='/manage'"><a [routerLink]="['/manage']" class="waves-effect waves-cyan"><i class="mdi-image-tune"></i> Config</a> </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+         <li class="bold" [class.active]="router.url=='/schedules'"><a [routerLink]="['/schedules']" class="waves-effect waves-cyan"><i class="mdi-notification-event-note"></i> Schedule</a>          </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+         <li class="bold" [class.active]="router.url=='/user'"><a [routerLink]="['/user']" class="waves-effect waves-cyan"><i class="mdi-action-settings"></i>Settings</a> </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+         <li class="bold" [class.active]="router.url=='/login'" (click) = "signout()" ><a class="waves-effect waves-cyan"><i class="mdi-action-exit-to-app" ></i>Logout</a> </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+         <li class="li-hover">
+            <div class="divider"></div>
+         </li>
+      
+      </ul>
+     <button  id="sideN"  onclick="document.getElementById('slide-out').style.left='0';" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only cyan"><i class="mdi-navigation-menu"></i></button>
+     
+       <!--<button  id="sideN"  onclick="toggleContent()" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only cyan"><i class="mdi-navigation-menu"></i></button>-->
+   </aside>
+   <!-- END LEFT SIDEBAR NAV-->
+</div>
+
